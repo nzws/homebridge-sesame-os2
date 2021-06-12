@@ -1,0 +1,25 @@
+version: '2'
+
+services:
+  homebridge:
+    image: oznu/homebridge:ubuntu
+    restart: always
+    ports:
+      - '5353:5353'
+      - '8581:8581'
+      - '53141:53141'
+    networks:
+      - bridge
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - HOMEBRIDGE_CONFIG_UI=1
+      - HOMEBRIDGE_CONFIG_UI_PORT=8581
+      - TZ=Tokyo/Japan
+    volumes:
+      - ./volumes/homebridge:/homebridge
+      - ./:/home/homebridge/plugin
+
+networks:
+  bridge:
+    driver: bridge
