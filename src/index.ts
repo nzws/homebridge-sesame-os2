@@ -15,9 +15,10 @@ export = (api: API): void => {
 
 type Config = {
   uuid: string;
-  secret: string;
+  secret?: string;
+  secretKey?: string;
   accessToken: string;
-  statusUpdateIntervalSec?: number;
+  intervalSeconds?: number;
   displayName?: string;
 };
 
@@ -50,8 +51,8 @@ class SESAMEOS2 {
 
     this.service = new hap.Service.LockMechanism(config.name);
 
-    if (!this.config.accessToken) {
-      this.log.warn('accessToken is not found, running in test mode.');
+    if (!this.config.secret && !this.config.secretKey) {
+      throw new Error('Please input secret or secretKey to config.');
     }
 
     this.currentStateCharacteristic = this.service
@@ -71,15 +72,18 @@ class SESAMEOS2 {
     this.sesame = new SesameAPI(
       this.config.accessToken,
       this.config.uuid,
-      this.config.secret,
-      { isQRSecret: true, displayName: this.config.displayName || 'Homebridge' }
+      this.config.secret || this.config.secretKey || '',
+      {
+        isQRSecret: !!this.config.secret,
+        displayName: this.config.displayName || 'Homebridge'
+      }
     );
 
     const job = () => {
       void this.getStatus();
     };
 
-    const interval = this.config.statusUpdateIntervalSec || 60;
+    const interval = this.config.intervalSeconds || 300;
     job();
     setInterval(job, interval * 1000);
   }
