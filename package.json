@@ -1,7 +1,7 @@
 {
   "displayName": "SESAME OS2 (SESAME3) Plugin",
   "name": "@nzws/homebridge-sesame-os2",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Homebridge Plugin for SESAME OS2 (SESAME3)",
   "license": "Apache-2.0",
   "publishConfig": {
